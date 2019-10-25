@@ -1,0 +1,10 @@
+package XML;
+
+import java.util.ArrayList;
+
+public class Main {
+    public static void main(String args[]){
+        Clinic clinic = Service.loadBankFromXML();
+        System.out.println(Service.sortByGender(clinic.getDoctors(),Gender.MALE));
+    }
+}
