@@ -1,1 +1,28 @@
 
+Hibernate: create table Clinic (id int8 not null, address varchar(255), name varchar(255), primary key (id))
+Hibernate: create table Clinic_Area (Clinic_id int8 not null, areas_id int8 not null)
+Hibernate: create table Clinic_Doctors (Clinic_id int8 not null, doctors_id int8 not null)
+Hibernate: create table Clinic_Patient (Clinic_id int8 not null, patients_id int8 not null)
+Hibernate: create table Diagnoses (id int8 not null, name varchar(255), primary key (id))
+Hibernate: create table Doctors (id int8 not null, specialty varchar(255), area_id int8, primary key (id))
+Hibernate: create table Patient (id int8 not null, area_id int8, primary key (id))
+Hibernate: create table Patient_Diagnoses (Patient_id int8 not null, diagnoses_id int8 not null)
+
+Hibernate: alter table if exists Clinic_Area add constraint UK_8chs0q4geiemcydaao1mb8r89 unique (areas_id)
+Hibernate: alter table if exists Clinic_Area add constraint FKd3jjd96ro0b6997a13afa6xyj foreign key (areas_id) references Area
+Hibernate: alter table if exists Clinic_Area add constraint FKskn28clp0p56h4v8xij0l1q8k foreign key (Clinic_id) references Clinic
+
+Hibernate: alter table if exists Clinic_Doctors add constraint UK_cd3a8wko5yys4lte5dx8buqay unique (doctors_id)
+Hibernate: alter table if exists Clinic_Doctors add constraint FKce5ny5gvk0f7m8e3nk07h4asr foreign key (doctors_id) references Doctors
+Hibernate: alter table if exists Clinic_Doctors add constraint FK2nrau4luga7sdidq5u6xq3w5v foreign key (Clinic_id) references Clinic
+
+Hibernate: alter table if exists Clinic_Patient add constraint UK_kjpumi4pelu221ltbxkxgvkpe unique (patients_id)
+Hibernate: alter table if exists Clinic_Patient add constraint FKqucxxsclfxwqbmqfj1lnxlw8o foreign key (patients_id) references Patient
+Hibernate: alter table if exists Clinic_Patient add constraint FKa1bpsppbtfqy368h8yxk2u5w3 foreign key (Clinic_id) references Clinic
+
+Hibernate: alter table if exists Patient_Diagnoses add constraint UK_odi5ybp4gy64eo4h7ly02olx0 unique (diagnoses_id)
+Hibernate: alter table if exists Patient_Diagnoses add constraint FKkxxri69x7upgniolyavlkltq5 foreign key (diagnoses_id) references Diagnoses
+Hibernate: alter table if exists Patient_Diagnoses add constraint FKrlt1rg6pskc3cgki3dp0ocjm1 foreign key (Patient_id) references Patient
+
+Hibernate: alter table if exists Doctors add constraint FKirs76m6p5vlfkmm97ov45xrd6 foreign key (area_id) references Area
+Hibernate: alter table if exists Patient add constraint FKg4l2p9g95galnn55s4xxlqsya foreign key (area_id) references Area
