@@ -1,0 +1,59 @@
+CREATE TABLE public.patient (
+    id bigint NOT NULL,
+    area_id bigint,
+    name character varying(255),
+    birthDate Date,
+	CONSTRAINT patient_pkey PRIMARY KEY (id)
+);
+
+
+CREATE TABLE public.patient_diagnose (
+    patient_id bigint NOT NULL,
+    diagnoses_id bigint NOT NULL,
+	CONSTRAINT patient_diagnose_pkey PRIMARY KEY (patient_id)
+);
+
+CREATE TABLE public.diagnose (
+   	id bigint NOT NULL,
+    name character varying(255),
+	CONSTRAINT diagnose_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.doctor (
+    id bigint NOT NULL,
+    area_id bigint,
+	specialty text,
+    name character varying(255),
+    birthDate Date,
+	CONSTRAINT doctor_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.area (
+    id bigint NOT NULL,
+    name text,
+	CONSTRAINT area_pkey PRIMARY KEY (id)
+
+);
+
+CREATE TABLE public.clinic (
+    id bigint NOT NULL,
+    name character varying(255),
+	address character varying(255),
+    birthDate Date,
+	CONSTRAINT clinic_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE public.clinic_area (
+    clinic_id bigint NOT NULL,
+    areas_id bigint NOT NULL,
+	CONSTRAINT clinic_area_pkey PRIMARY KEY (clinic_id)
+);
+CREATE TABLE public.clinic_doctor (
+    clinic_id bigint NOT NULL,
+    doctors_id bigint NOT NULL,
+	CONSTRAINT clinic_doctor_pkey PRIMARY KEY (clinic_id)
+);
+CREATE TABLE public.clinic_patient (
+    clinic_id bigint NOT NULL,
+    patients_id bigint NOT NULL,
+	CONSTRAINT clinic_patient_pkey PRIMARY KEY (clinic_id)
+);
