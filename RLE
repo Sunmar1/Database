@@ -1,0 +1,112 @@
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+
+public class RLE {
+    static double fullLength;
+    public static void main(String args[]) throws IOException {
+
+
+       imageToBitMap(new File("real2.jpg"),new File("real2.txt"),8);
+       double length=compress(new File("real2.txt"),new File("OT.txt"),24, (int) Math.pow(2,17));
+
+        System.out.println("Длина до кодирования: "+(long) fullLength);
+        System.out.println("Длина после кодирования: "+(long)length);
+        System.out.println("Коэффициент компрессии: "+fullLength/length);
+
+
+
+
+
+
+    }
+    public static  void imageToBitMap (File in,File out,int length) throws IOException {
+        BufferedImage bw=ImageIO.read(in);
+        BufferedWriter writer=new BufferedWriter(new FileWriter(out));
+        for(int i=0;i<bw.getRaster().getHeight();i++) {
+
+            for(int j=0;j<bw.getRaster().getWidth();j++) {
+                Color c=getPixelColor(bw,j,i);
+                if(length!=1) {
+                    writer.write(toBin(c.getRed(), length) + toBin(c.getGreen(), length) + toBin(c.getBlue(), length));
+                }else
+                    writer.write(toBin(c.getRed(), length));
+                writer.flush();
+            }
+
+        }
+    }
+
+
+    public static double compress(File in,File out,int bitLength,int maxCount) throws IOException {
+        String input= readFile(in);
+        String last=input.substring(0,bitLength);
+        System.out.println(last);
+        System.out.println();
+        StringBuilder sb=new StringBuilder();
+        int k=1;
+        for(int i=bitLength;i<input.length();i+=bitLength){
+            if(last.equals(input.substring(i,i+bitLength))){
+               if(k!=maxCount)
+                   k++;
+               else{
+                   sb.append(k);
+                   sb.append(last);
+                   k=1;
+               }
+
+           }
+           else{
+               sb.append(k);
+               sb.append(last);
+               k=1;
+               last=input.substring(i,i+bitLength);
+
+           }
+
+
+        }
+
+        write(sb.toString(),out);
+
+
+        return  sb.length();
+
+
+    }
+    public static  String readFile(File file) throws IOException {
+        StringBuilder sb=new StringBuilder();
+        BufferedReader br= new BufferedReader(new FileReader(file));
+        String in=br.readLine();
+        while(in!=null){
+            sb.append(in);
+            in=br.readLine();
+        }
+        fullLength=sb.length();
+        return sb.toString();
+    }
+    public static  void write(String in,File file) throws IOException {
+        BufferedWriter bw= new BufferedWriter(new FileWriter(file));
+        bw.write(in);
+        bw.flush();
+
+    }
+    public  static Color getPixelColor(BufferedImage bi, int x, int y) {
+        Object colorData = bi.getRaster().getDataElements(x, y, null);//данные о пикселе
+        int argb = bi.getColorModel().getRGB(colorData);//преобразование данных в цветовое значение
+        return new Color(argb, true);
+    }
+    private static String toBin(int i,int length) {
+        StringBuilder sb = new StringBuilder();
+        while (i > 0) {
+            sb.insert(0, i & 1);
+            i >>= 1;
+        }
+        if (sb.length() == 0) sb.append("0");
+        while(sb.length()<length){
+            sb.insert(0,0);
+        }
+        return sb.toString();
+    }
+}
